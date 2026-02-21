@@ -1,4 +1,11 @@
-window.onload = loadExpenses;
+window.onload = function () {
+    loadExpenses();
+
+    const savedBalance = localStorage.getItem("balance");
+    if (savedBalance) {
+        document.querySelector(".amount").textContent = "₹ " + savedBalance;
+    }
+};
 
 const modal = document.getElementById("expenseModal");
 const openBtn = document.getElementById("openExpenseModal");
@@ -19,45 +26,42 @@ document.getElementById("expenseForm").onsubmit = function (e) {
     const date = document.getElementById("expenseDate").value;
     const amount = document.getElementById("expenseAmount").value;
 
-    fetch("localStorage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, date, amount })
-    })
-        .then(() => {
-            modal.style.display = "none";
-            loadExpenses();
-            this.reset();
-        });
+    const expense = { name, date, amount };
+
+    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+    expenses.push(expense);
+
+    localStorage.setItem("expenses", JSON.stringify(expenses));
+
+    modal.style.display = "none";
+    this.reset();
+    loadExpenses();
 };
 
 function loadExpenses() {
-    fetch("localStorage")
-        .then(res => res.json())
-        .then(data => {
+    const list = document.getElementById("expenseList");
+    list.innerHTML = "";
 
-            const list = document.getElementById("expenseList");
-            list.innerHTML = "";
+    let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
-            let total = 0;
+    let total = 0;
 
-            data.forEach(exp => {
-                total += Number(exp.amount);
+    expenses.forEach(exp => {
+        total += Number(exp.amount);
 
-                const div = document.createElement("div");
-                div.className = "expense";
+        const div = document.createElement("div");
+        div.className = "expense";
 
-                div.innerHTML = `
-                    <div>${exp.name}</div>
-                    <div>${exp.date}</div>
-                    <div>₹ ${exp.amount}</div>
-                `;
+        div.innerHTML = `
+            <div>${exp.name}</div>
+            <div>${exp.date}</div>
+            <div>₹ ${exp.amount}</div>
+        `;
 
-                list.appendChild(div);
-            });
+        list.appendChild(div);
+    });
 
-            document.querySelector(".amount").textContent = "₹ " + total;
-        });
+    document.querySelector(".amount").textContent = "₹ " + total;
 }
 
 const balanceModal = document.getElementById("balanceModal");
@@ -80,14 +84,8 @@ document.getElementById("saveBalance").onclick = function () {
         return;
     }
 
-    fetch("localStorage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amount })
-    })
-        .then(res => res.json())
-        .then(data => {
-            document.querySelector(".amount").textContent = "₹ " + data.balance;
-            balanceModal.style.display = "none";
-        });
+    localStorage.setItem("balance", amount);
+    document.querySelector(".amount").textContent = "₹ " + amount;
+
+    balanceModal.style.display = "none";
 };
