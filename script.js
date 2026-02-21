@@ -19,20 +19,20 @@ document.getElementById("expenseForm").onsubmit = function (e) {
     const date = document.getElementById("expenseDate").value;
     const amount = document.getElementById("expenseAmount").value;
 
-    fetch("http://localhost:5000/expenses", {
+    fetch("localStorage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, date, amount })
     })
-    .then(() => {
-        modal.style.display = "none";
-        loadExpenses();
-        this.reset();
-    });
+        .then(() => {
+            modal.style.display = "none";
+            loadExpenses();
+            this.reset();
+        });
 };
 
 function loadExpenses() {
-    fetch("http://localhost:5000/expenses")
+    fetch("localStorage")
         .then(res => res.json())
         .then(data => {
 
@@ -80,14 +80,14 @@ document.getElementById("saveBalance").onclick = function () {
         return;
     }
 
-    fetch("http://localhost:5000/balance", {
+    fetch("localStorage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: amount })
     })
-    .then(res => res.json())
-    .then(data => {
-        document.querySelector(".amount").textContent = "₹ " + data.balance;
-        balanceModal.style.display = "none";
-    });
+        .then(res => res.json())
+        .then(data => {
+            document.querySelector(".amount").textContent = "₹ " + data.balance;
+            balanceModal.style.display = "none";
+        });
 };
