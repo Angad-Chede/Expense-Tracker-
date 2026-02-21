@@ -43,11 +43,12 @@ function loadExpenses() {
     list.innerHTML = "";
 
     let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+    let savedBalance = Number(localStorage.getItem("balance")) || 0;
 
-    let total = 0;
+    let totalExpenses = 0;
 
     expenses.forEach(exp => {
-        total += Number(exp.amount);
+        totalExpenses += Number(exp.amount);
 
         const div = document.createElement("div");
         div.className = "expense";
@@ -61,7 +62,9 @@ function loadExpenses() {
         list.appendChild(div);
     });
 
-    document.querySelector(".amount").textContent = "₹ " + total;
+    const remainingBalance = savedBalance - totalExpenses;
+
+    document.querySelector(".amount").textContent = "₹ " + remainingBalance;
 }
 
 const balanceModal = document.getElementById("balanceModal");
@@ -85,7 +88,7 @@ document.getElementById("saveBalance").onclick = function () {
     }
 
     localStorage.setItem("balance", amount);
-    document.querySelector(".amount").textContent = "₹ " + amount;
+    loadExpenses();
 
     balanceModal.style.display = "none";
 };
