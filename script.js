@@ -92,3 +92,108 @@ document.getElementById("saveBalance").onclick = function () {
 
     balanceModal.style.display = "none";
 };
+
+let chart;
+
+function getExpenses(){
+    return JSON.parse(
+        localStorage.getItem("expenses")
+    ) || [];
+}
+
+function createGraph(labels,data,label){
+
+    const ctx =
+    document.getElementById("expenseChart");
+
+    if(chart) chart.destroy();
+
+    chart = new Chart(ctx,{
+        type:"line",
+        data:{
+            labels:labels,
+            datasets:[{
+                label:label,
+                data:data,
+                borderColor:"#22d3ee",
+                backgroundColor:"rgba(34,211,238,0.15)",
+                fill:true,
+                tension:0.4,
+                pointRadius:5,
+                pointBackgroundColor:"#22d3ee"
+            }]
+        },
+        options:{
+            responsive:true,
+            plugins:{
+                legend:{
+                    labels:{color:"white"}
+                }
+            },
+            scales:{
+                x:{
+                    ticks:{color:"white"},
+                    grid:{color:"rgba(255,255,255,0.05)"}
+                },
+                y:{
+                    ticks:{color:"white"},
+                    grid:{color:"rgba(255,255,255,0.05)"}
+                }
+            }
+        }
+    });
+}
+
+function loadMonthly(){
+
+    let expenses=getExpenses();
+    let days=new Array(31).fill(0);
+
+    expenses.forEach(e=>{
+        let d=new Date(e.date);
+        let day=d.getDate()-1;
+        days[day]+=Number(e.amount);
+    });
+
+    createGraph(
+        [...Array(31).keys()].map(i=>i+1),
+        days,
+        "Monthly Expenses"
+    );
+}
+
+function loadDaily(){
+
+    let expenses=getExpenses();
+    let today=new Date().toISOString().split("T")[0];
+    let total=0;
+
+    expenses.forEach(e=>{
+        if(e.date===today)
+            total+=Number(e.amount);
+    });
+
+    createGraph(
+        ["Today"],
+        [total],
+        "Today's Spending"
+    );
+}
+
+function loadYearly(){
+
+    let expenses=getExpenses();
+    let months=new Array(12).fill(0);
+
+    expenses.forEach(e=>{
+        let m=new Date(e.date).getMonth();
+        months[m]+=Number(e.amount);
+    });
+
+    createGraph(
+        ["Jan","Feb","Mar","Apr","May","Jun",
+         "Jul","Aug","Sep","Oct","Nov","Dec"],
+        months,
+        "Yearly Expenses"
+    );
+}
