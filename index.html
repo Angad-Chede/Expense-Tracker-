@@ -1,6 +1,6 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,85 +10,106 @@
 
 <body>
 
-    <div class="container">
-        <h1>Expense Tracker</h1>
-        <p class="subtitle">Balance tracking made easy</p>
+<nav class="navbar">
+    <div class="nav-left">
+        <div class="logo">💰</div>
+        <h2 class="brand">ExpenseTracker</h2>
     </div>
-    <div class="dashboard">
-        <div class="left-side">
-            <div class="row balance-row">
-                <div class="card balance">
-                    <h3>Current Balance</h3>
-                    <p class="amount">₹ 0</p>
-                </div>
-            </div>
 
-            <div class="row actions">
-                <div class="card action" id="openExpenseModal">
-                    <h3> Add Expense</h3>
-                </div>
+    <ul class="nav-links">
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Expenses</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">Profile</a></li>
+    </ul>
 
-                <div class="card action" id="openBalanceModal">
-                    <h3> Add Balance</h3>
-                </div>
+    <div class="nav-right">
+        <button class="nav-btn">+ Add</button>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Expense Tracker</h1>
+    <p class="subtitle">Balance tracking made easy</p>
+</div>
+
+<div class="dashboard">
+    <div class="left-side">
+        <div class="row balance-row">
+            <div class="card balance">
+                <h3>Current Balance</h3>
+                <p class="amount">₹ 0</p>
             </div>
         </div>
-        <div class="right-side">
-            <div class="card">
-                <h3>Recent Expenses</h3>
-                <div class="expense-list" id="expenseList">
-                    <div class="expense">
-                        <div class="expense-info">
-                            <div class="expense-name">Expense</div>
-                            <div class="expense-date">Date</div>
-                            <div class="expense-amount">Amount</div>
-                        </div>
+
+        <div class="row actions">
+            <div class="card action" id="openExpenseModal">
+                <h3>Add Expense</h3>
+            </div>
+
+            <div class="card action" id="openBalanceModal">
+                <h3>Add Balance</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-side">
+        <div class="card">
+            <h3>Recent Expenses</h3>
+            <div class="expense-list" id="expenseList">
+                <div class="expense">
+                    <div class="expense-info">
+                        <div class="expense-name">Expense</div>
+                        <div class="expense-date">Date</div>
+                        <div class="expense-amount">Amount</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div id="expenseModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Add Expense</h2>
-            <form id="expenseForm">
-                <div class="form-group">
-                    <label>Expense Name</label>
-                    <input type="text" id="expenseName" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Date</label>
-                    <input type="date" id="expenseDate" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Amount</label>
-                    <input type="number" id="expenseAmount" required>
-                </div>
-
-                <button type="submit" class="btn-primary">Add Expense</button>
-            </form>
-
-            
-
-            
-        </div>
-    </div>
-
-    <div id="balanceModal" class="modal">
-        <div class="modal-content">
-            <span class="close-balance">&times;</span>
-            <h2>Add Balance</h2>
-            <input type="number" id="balanceAmount" placeholder="Enter amount">
-            <button id="saveBalance">Add Balance</button>
-        </div>
 </div>
 
-    <script src="script.js"></script>
+<div id="expenseModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Add Expense</h2>
+
+        <form id="expenseForm">
+            <div class="form-group">
+                <label>Expense Name</label>
+                <input type="text" id="expenseName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="expenseDate" required>
+            </div>
+
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" id="expenseAmount" required>
+            </div>
+
+            <button type="submit" class="btn-primary">Add Expense</button>
+        </form>
+    </div>
+</div>
+
+<div id="balanceModal" class="modal">
+    <div class="modal-content">
+        <span class="close-balance">&times;</span>
+        <h2>Add Balance</h2>
+        <input type="number" id="balanceAmount" placeholder="Enter amount">
+        <button id="saveBalance">Add Balance</button>
+    </div>
+</div>
+
+<input id="input" placeholder="Ask something..." />
+<button onclick="askClaude()">Ask AI</button>
+<p id="output"></p>
+
+<script src="script.js"></script>
 
 </body>
-
 </html>
+```
