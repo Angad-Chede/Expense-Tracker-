@@ -6,7 +6,7 @@
 }
 
 body {
-    background: #c9d0db;
+    background: #01050c;
 }
 
 .container {
@@ -17,10 +17,11 @@ body {
 
 h1 {
     font-size: 40px;
+    color: #f9faf9;
 }
 
 .subtitle {
-    color: #3a2828fb;
+    color: #f7f3f3a2;
     margin-top: 10px;
 }
 
@@ -40,7 +41,7 @@ h1 {
 }
 
 .card {
-    background: rgb(4, 122, 190);
+    background: rgba(238, 240, 241, 0.649);
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -75,14 +76,14 @@ h1 {
 .actions input {
     flex: 1;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #0a0707;
     border-radius: 6px;
     font-size: 14px;
 }
 
 .action {
-    background-color: #0b0101;
-    color: #f9faf9;
+    background-color: #f6f2f2;
+    color: #020a02;
     flex: 1;
     text-align: center;
     cursor: pointer;
@@ -133,7 +134,7 @@ h1 {
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(6, 0, 0, 0.5);
+  background: rgba(248, 247, 247, 0.5);
   align-items: center;
   justify-content: center;
 }
@@ -168,7 +169,7 @@ h1 {
 }
 
 .btn-primary {
-  background: #047abe;
+  background: #e1e9ee;
   color: white;
   padding: 10px;
   border: none;
