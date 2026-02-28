@@ -12,7 +12,7 @@
 
 <nav class="navbar">
     <div class="nav-left">
-        <div class="logo">💰</div>
+        <div class="logo"></div>
         <h2 class="brand">ExpenseTracker</h2>
     </div>
 
@@ -29,8 +29,8 @@
 </nav>
 
 <div class="container">
-    <h1>Expense Tracker</h1>
-    <p class="subtitle">Balance tracking made easy</p>
+    <h1>Track Expenses Effortlessly</h1>
+    <p class="subtitle">Improve accountability and Enhance financial performance.</p>
 </div>
 
 <div class="dashboard">
@@ -104,12 +104,26 @@
     </div>
 </div>
 
-<input id="input" placeholder="Ask something..." />
-<button onclick="askClaude()">Ask AI</button>
-<p id="output"></p>
+<div class="analytics-section">
+    <div class="analytics-header">
+        <h2>Expense Analytics</h2>
+
+        <div class="graph-tabs">
+            <button onclick="loadDaily()">Day</button>
+            <button onclick="loadMonthly()">Month</button>
+            <button onclick="loadYearly()">Year</button>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="expenseChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script src="script.js"></script>
 
 </body>
 </html>
-```
+
