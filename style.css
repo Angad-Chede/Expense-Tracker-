@@ -32,13 +32,15 @@ body{
     gap:12px;
 }
 
-.logo{
-    font-size:26px;
+.nav-logo{
+    height:38px;
+    width:auto;
+    object-fit:contain;
 }
 
 .brand{
+    font-size:20px;
     font-weight:600;
-    letter-spacing:.5px;
 }
 
 .nav-links{
