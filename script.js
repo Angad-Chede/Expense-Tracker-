@@ -1,49 +1,41 @@
 window.addEventListener("load", initApp);
 
+let chart;
+
 function initApp(){
     setupModals();
     setupExpenseForm();
     setupBalanceSystem();
-
     loadExpenses();
-    loadMonthly();
     updateBalance();
+    loadMonthly();
 }
 
 function getExpenses(){
-    return JSON.parse(
-        localStorage.getItem("expenses")
-    ) || [];
+    return JSON.parse(localStorage.getItem("expenses")) || [];
 }
 
-function saveExpenses(expenses){
-    localStorage.setItem(
-        "expenses",
-        JSON.stringify(expenses)
-    );
+function saveExpenses(data){
+    localStorage.setItem("expenses",JSON.stringify(data));
 }
-
 
 function calculateCurrentBalance(){
-
-    const totalBalance =
+    const balance =
         Number(localStorage.getItem("balance")) || 0;
 
     const expenses = getExpenses();
 
-    let totalExpenses = 0;
+    let spent = 0;
 
-    expenses.forEach(exp=>{
-        totalExpenses += Number(exp.amount);
+    expenses.forEach(e=>{
+        spent += Number(e.amount);
     });
 
-    return totalBalance - totalExpenses;
+    return balance - spent;
 }
 
 function updateBalance(){
-
     let value = calculateCurrentBalance();
-
     if(isNaN(value)) value = 0;
 
     document.querySelector(".amount")
@@ -55,15 +47,14 @@ function setupModals(){
     const expenseModal =
         document.getElementById("expenseModal");
 
+    const balanceModal =
+        document.getElementById("balanceModal");
+
     document.getElementById("openExpenseModal")
     .onclick=()=>expenseModal.style.display="flex";
 
     document.querySelector(".close-modal")
     .onclick=()=>expenseModal.style.display="none";
-
-
-    const balanceModal =
-        document.getElementById("balanceModal");
 
     document.getElementById("openBalanceModal")
     .onclick=()=>balanceModal.style.display="flex";
@@ -71,7 +62,6 @@ function setupModals(){
     document.querySelector(".close-balance")
     .onclick=()=>balanceModal.style.display="none";
 }
-
 
 function setupExpenseForm(){
 
@@ -83,22 +73,25 @@ function setupExpenseForm(){
         const name =
         document.getElementById("expenseName").value;
 
-        const date =
-        document.getElementById("expenseDate").value;
-
         const amount =
         Number(
             document.getElementById("expenseAmount").value
         );
 
-        let expenses=getExpenses();
+        if(!name || !amount) return;
 
-        expenses.push({
+        const now = new Date();
+
+        const expense={
             name,
-            date,
-            amount:Number(amount),
-            time:new Date().getHours()
-        });
+            amount,
+            date:now.toISOString().split("T")[0],
+            time:now.getHours()
+        };
+
+        const expenses=getExpenses();
+
+        expenses.push(expense);
 
         saveExpenses(expenses);
 
@@ -122,50 +115,61 @@ function loadExpenses(){
 
     const expenses=getExpenses();
 
-    expenses.forEach(exp=>{
+    const grouped={};
 
-        const div=document.createElement("div");
-        div.className="expense";
+    expenses.forEach(e=>{
+        if(!grouped[e.date])
+            grouped[e.date]=[];
 
-        div.innerHTML=`
-            <div>${exp.name}</div>
-            <div>${exp.date}</div>
-            <div>₹ ${exp.amount}</div>
-        `;
+        grouped[e.date].push(e);
+    });
 
-        list.appendChild(div);
+    Object.keys(grouped)
+    .sort((a,b)=>new Date(b)-new Date(a))
+    .forEach(date=>{
+
+        const header=document.createElement("div");
+        header.className="expense-date-header";
+        header.textContent=date;
+
+        list.appendChild(header);
+
+        grouped[date].forEach(exp=>{
+
+            const row=document.createElement("div");
+            row.className="expense";
+
+            row.innerHTML=`
+                <div>${exp.name}</div>
+                <div></div>
+                <div>₹ ${exp.amount}</div>
+            `;
+
+            list.appendChild(row);
+        });
     });
 }
-
 
 function setupBalanceSystem(){
 
     document.getElementById("saveBalance")
     .onclick=function(){
 
-        const amount =
+        const amount=
         Number(
             document.getElementById("balanceAmount").value
         );
 
-        if(!amount){
-            alert("Enter amount");
-            return;
-        }
+        if(!amount) return;
 
-        let currentBalance =
+        let current=
             Number(localStorage.getItem("balance"))||0;
 
-        currentBalance+=amount;
+        current+=amount;
 
-        localStorage.setItem(
-            "balance",
-            currentBalance
-        );
+        localStorage.setItem("balance",current);
 
-        document.getElementById(
-            "balanceAmount"
-        ).value="";
+        document.getElementById("balanceAmount").value="";
 
         document.getElementById("balanceModal")
         .style.display="none";
@@ -174,52 +178,84 @@ function setupBalanceSystem(){
     };
 }
 
-let chart;
-
 function renderChart(labels,data,title){
 
-    if(chart) chart.destroy();
-
-    const options={
-        chart:{
-            type:"line",
-            height:350,
-            background:"transparent",
-            toolbar:{show:false}
-        },
-
-        series:[{
-            name:title,
-            data:data
-        }],
-
-        theme:{mode:"dark"},
-
-        stroke:{
-            curve:"smooth",
-            width:3
-        },
-
-        grid:{
-            borderColor:
-            "rgba(255,255,255,0.08)"
-        },
-
-        xaxis:{
-            categories:labels
-        },
-
-        tooltip:{theme:"dark"}
-    };
+    if(chart){
+        chart.destroy();
+    }
 
     chart=new ApexCharts(
         document.querySelector("#expenseChart"),
-        options
+        {
+            chart:{
+                type:"line",
+                height:350,
+                background:"transparent",
+                toolbar:{show:false},
+                foreColor:"#010408ff"
+            },
+
+            series:[{
+                name:title,
+                data:data
+            }],
+
+            stroke:{
+                curve:"smooth",
+                width:6,
+                colors:["#050104ff"]
+            },
+
+            markers:{
+                size:4,
+                colors:["#030105ff"],
+                strokeColors:"#030305ff",
+                strokeWidth:2
+            },
+
+            fill:{
+                type:"gradient",
+                gradient:{
+                    shade:"dark",
+                    type:"vertical",
+                    opacityFrom:.45,
+                    opacityTo:.05,
+                    stops:[0,100]
+                }
+            },
+
+            grid:{
+                borderColor:"rgba(255, 255, 255, 1)",
+                strokeDashArray:5
+            },
+
+            xaxis:{
+                categories:labels,
+                labels:{
+                    style:{
+                        colors:"#eaedf1ff",
+                        fontSize:"12px"
+                    }
+                }
+            },
+
+            yaxis:{
+                labels:{
+                    style:{
+                        colors:"#e2e8f0",
+                        fontSize:"15px"
+                    }
+                }
+            },
+
+            tooltip:{
+                theme:"dark"
+            }
+        }
     );
 
     chart.render();
 }
-
 
 function loadMonthly(){
 
@@ -227,40 +263,38 @@ function loadMonthly(){
     const days=new Array(31).fill(0);
 
     expenses.forEach(e=>{
-        const d=new Date(e.date);
-        days[d.getDate()-1]+=e.amount;
+        const d=new Date(e.date).getDate()-1;
+        days[d]+=Number(e.amount);
     });
 
     renderChart(
-        [...Array(31).keys()].map(i=>i+1),
+        Array.from({length:31},(_,i)=>i+1),
         days,
         "Monthly Expenses"
     );
 }
 
-
 function loadDaily(){
 
     const expenses=getExpenses();
-    const hours=new Array(24).fill(0);
-
     const today=
-    new Date().toISOString().split("T")[0];
+        new Date().toISOString().split("T")[0];
+
+    const hours=new Array(24).fill(0);
 
     expenses.forEach(e=>{
         if(e.date===today){
-            const hour=e.time ?? 0;
-            hours[hour]+=e.amount;
+            const h=e.time ?? 0;
+            hours[h]+=Number(e.amount);
         }
     });
 
     renderChart(
-        [...Array(24).keys()].map(h=>h+":00"),
+        Array.from({length:24},(_,i)=>i+":00"),
         hours,
         "Today's Hourly Spending"
     );
 }
-
 
 function loadYearly(){
 
@@ -268,9 +302,8 @@ function loadYearly(){
     const months=new Array(12).fill(0);
 
     expenses.forEach(e=>{
-        const m=
-        new Date(e.date).getMonth();
-        months[m]+=e.amount;
+        const m=new Date(e.date).getMonth();
+        months[m]+=Number(e.amount);
     });
 
     renderChart(
@@ -280,7 +313,6 @@ function loadYearly(){
         "Yearly Expenses"
     );
 }
-
 
 window.loadDaily=loadDaily;
 window.loadMonthly=loadMonthly;
