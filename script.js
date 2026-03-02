@@ -192,7 +192,7 @@ function renderChart(labels,data,title){
                 height:350,
                 background:"transparent",
                 toolbar:{show:false},
-                foreColor:"#010408ff"
+                foreColor:"#d3d9e1ff"
             },
 
             series:[{
@@ -203,13 +203,13 @@ function renderChart(labels,data,title){
             stroke:{
                 curve:"smooth",
                 width:6,
-                colors:["#050104ff"]
+                colors:["#d3cbd1ff"]
             },
 
             markers:{
                 size:4,
-                colors:["#030105ff"],
-                strokeColors:"#030305ff",
+                colors:["#f4f3f5ff"],
+                strokeColors:"#fdfdffff",
                 strokeWidth:2
             },
 
