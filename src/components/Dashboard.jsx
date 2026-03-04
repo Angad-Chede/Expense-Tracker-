@@ -1,3 +1,4 @@
+import { deleteExpense } from "../utils/expenseLogic";
 import Chart from "react-apexcharts";
 import { useState, useEffect } from "react";
 import {
@@ -39,6 +40,11 @@ function Dashboard() {
     setBalance(newBalance);
     setBalanceInput("");
     setShowBalanceModal(false);
+  };
+
+  const handleDeleteExpense = (index) => {
+    const updated = deleteExpense(expenses, index);
+    setExpenses(updated);
   };
 
   const chartData = {
@@ -138,6 +144,13 @@ function Dashboard() {
                     <div className="expense-name">{exp.name}</div>
                     <div className="expense-date">{exp.date}</div>
                     <div className="expense-amount">₹ {exp.amount}</div>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteExpense(i)}
+                    >
+                      ✕
+                    </button>
                   </div>
                 ))}
               </div>
