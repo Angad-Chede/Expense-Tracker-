@@ -53,3 +53,9 @@ export function groupExpensesByDate(expenses) {
 
   return grouped;
 }
+
+export function deleteExpense(expenses, index) {
+  const updated = expenses.filter((_, i) => i !== index);
+  localStorage.setItem("expenses", JSON.stringify(updated));
+  return updated;
+}
