@@ -1,7 +1,77 @@
+import Chart from "react-apexcharts";
+import { useState, useEffect } from "react";
+import {
+  getExpenses,
+  getBalance,
+  calculateCurrentBalance,
+  addExpense,
+  saveBalance
+} from "../utils/expenseLogic";
+
 function Dashboard() {
+  const [expenses, setExpenses] = useState([]);
+  const [balance, setBalance] = useState(0);
+
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
+
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [balanceInput, setBalanceInput] = useState("");
+
+  useEffect(() => {
+    setExpenses(getExpenses());
+    setBalance(getBalance());
+  }, []);
+
+  const handleAddExpense = (e) => {
+    e.preventDefault();
+    const updated = addExpense(expenses, name, amount);
+    setExpenses(updated);
+    setName("");
+    setAmount("");
+    setShowExpenseModal(false);
+  };
+
+  const handleAddBalance = () => {
+    const newBalance = Number(balance) + Number(balanceInput);
+    saveBalance(newBalance);
+    setBalance(newBalance);
+    setBalanceInput("");
+    setShowBalanceModal(false);
+  };
+
+  const chartData = {
+  series: [
+    {
+      name: "Expenses",
+      data: expenses.map(e => Number(e.amount))
+    }
+  ],
+  options: {
+    chart: {
+      type: "line",
+      background: "transparent",
+      toolbar: { show: false }
+    },
+    stroke: {
+      curve: "smooth",
+      width: 4
+    },
+    xaxis: {
+      categories: expenses.map(e => e.date)
+    },
+    grid: {
+      borderColor: "rgba(255,255,255,0.2)"
+    },
+    theme: {
+      mode: "dark"
+    }
+  }
+};
+
   return (
     <>
-      {/* NAVBAR */}
       <nav className="navbar">
         <div className="nav-left">
           <img src="/logo.png" className="nav-logo" alt="logo" />
@@ -21,10 +91,8 @@ function Dashboard() {
         </div>
       </nav>
 
-      {/* MAIN WRAPPER */}
       <div className="container">
 
-        {/* HERO */}
         <div className="hero">
           <h1>Track Expenses Effortlessly</h1>
           <p className="subtitle">
@@ -32,21 +100,28 @@ function Dashboard() {
           </p>
         </div>
 
-        {/* DASHBOARD CARDS */}
         <div className="dashboard">
           <div className="left-side">
 
             <div className="card balance">
               <h3>Current Balance</h3>
-              <p className="amount">₹ 0</p>
+              <p className="amount">
+                ₹ {calculateCurrentBalance(expenses, balance)}
+              </p>
             </div>
 
             <div className="actions">
-              <div className="card action">
+              <div
+                className="card action"
+                onClick={() => setShowExpenseModal(true)}
+              >
                 <h3>Add Expense</h3>
               </div>
 
-              <div className="card action">
+              <div
+                className="card action"
+                onClick={() => setShowBalanceModal(true)}
+              >
                 <h3>Add Balance</h3>
               </div>
             </div>
@@ -58,18 +133,19 @@ function Dashboard() {
               <h3>Recent Expenses</h3>
 
               <div className="expense-list">
-                <div className="expense">
-                  <div className="expense-name">Expense</div>
-                  <div className="expense-date">Date</div>
-                  <div className="expense-amount">Amount</div>
-                </div>
+                {expenses.map((exp, i) => (
+                  <div className="expense" key={i}>
+                    <div className="expense-name">{exp.name}</div>
+                    <div className="expense-date">{exp.date}</div>
+                    <div className="expense-amount">₹ {exp.amount}</div>
+                  </div>
+                ))}
               </div>
 
             </div>
           </div>
         </div>
 
-        {/* ANALYTICS SECTION INSIDE CONTAINER */}
         <div className="analytics">
           <div className="analytics-section">
 
@@ -83,12 +159,16 @@ function Dashboard() {
               </div>
             </div>
 
-            <div id="expenseChart"></div>
+            <Chart
+              options={chartData.options}
+              series={chartData.series}
+              type="line"
+              height={350}
+            />
 
           </div>
         </div>
 
-        {/* SECONDARY SECTION */}
         <div className="secondary">
           <h3>
             Monitor daily expenses, categorize spending, and optimize your
@@ -102,42 +182,59 @@ function Dashboard() {
 
       </div>
 
-      {/* MODALS (Keep Outside Layout Flow) */}
+      {showExpenseModal && (
+        <div className="modal" style={{ display: "flex" }}>
+          <div className="modal-content">
+            <h2>Add Expense</h2>
 
-      <div className="modal">
-        <div className="modal-content">
-          <h2>Add Expense</h2>
+            <form onSubmit={handleAddExpense}>
+              <div className="form-group">
+                <label>Expense Name</label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
 
-          <form>
-            <div className="form-group">
-              <label>Expense Name</label>
-              <input type="text" />
-            </div>
+              <div className="form-group">
+                <label>Amount</label>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+              </div>
 
-            <div className="form-group">
-              <label>Date</label>
-              <input type="date" />
-            </div>
+              <button type="submit" className="btn-primary">
+                Add Expense
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
-            <div className="form-group">
-              <label>Amount</label>
-              <input type="number" />
-            </div>
+      {showBalanceModal && (
+        <div className="modal" style={{ display: "flex" }}>
+          <div className="modal-content">
+            <h2>Add Balance</h2>
 
-            <button type="submit" className="btn-primary">
-              Add Expense
+            <input
+              type="number"
+              value={balanceInput}
+              onChange={(e) => setBalanceInput(e.target.value)}
+              placeholder="Enter amount"
+            />
+
+            <button
+              className="btn-primary"
+              onClick={handleAddBalance}
+            >
+              Add Balance
             </button>
-          </form>
+          </div>
         </div>
-      </div>
-
-      <div className="modal">
-        <div className="modal-content">
-          <h2>Add Balance</h2>
-          <input type="number" placeholder="Enter amount" />
-          <button className="btn-primary">Add Balance</button>
-        </div>
-      </div>
+      )}
 
     </>
   );
