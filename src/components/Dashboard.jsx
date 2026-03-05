@@ -1,6 +1,9 @@
 import { deleteExpense } from "../utils/expenseLogic";
+import { Link } from "react-router-dom";
 import Chart from "react-apexcharts";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Loader from "./loader";
 import {
   getExpenses,
   getBalance,
@@ -19,6 +22,9 @@ function Dashboard() {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [balanceInput, setBalanceInput] = useState("");
+
+  const navigate = useNavigate();
+  const [loading,setLoading] = useState(false);
 
   useEffect(() => {
     setExpenses(getExpenses());
@@ -45,6 +51,15 @@ function Dashboard() {
   const handleDeleteExpense = (index) => {
     const updated = deleteExpense(expenses, index);
     setExpenses(updated);
+  };
+
+  const goToPage = (path) => {
+  setLoading(true);
+
+  setTimeout(() => {
+    setLoading(false);
+    navigate(path);
+    }, 1200);
   };
 
   const chartData = {
@@ -76,6 +91,10 @@ function Dashboard() {
   }
 };
 
+if(loading){
+  return <Loader/>
+}
+
   return (
     <>
       <nav className="navbar">
@@ -85,15 +104,27 @@ function Dashboard() {
         </div>
 
         <ul className="nav-links">
-          <li><a href="#">Dashboard</a></li>
-          <li><a href="#">Expenses</a></li>
-          <li><a href="#">Reports</a></li>
-          <li><a href="#">Profile</a></li>
+          <li><Link to="/">Dashboard</Link></li>
+          <li><Link to="/">Expenses</Link></li>
+          <li><Link to="/">Reports</Link></li>
+          <li><Link to="/"></Link></li>
         </ul>
-
         <div className="nav-right">
-          <a href="#">Login</a>
-          <button className="nav-btn">SIGN-UP</button>
+
+          <button
+            className="login-link"
+            onClick={() => goToPage("/login")}
+          >
+            Login
+          </button>
+
+          <button
+            className="nav-btn"
+            onClick={() => goToPage("/signup")}
+          >
+            SIGN-UP
+          </button>
+
         </div>
       </nav>
 
