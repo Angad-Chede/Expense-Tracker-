@@ -19,8 +19,6 @@ function Login() {
         <div className="auth-box">
         <h2>Welcome Back</h2>
 
-        <p className="auth-subtitle">Login to manage your expenses</p>
-
         <form onSubmit={handleLogin}>
 
           <div className="form-group">
