@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "./loader";
 import PageWrapper from "./PageWrapper";
+import { convertCurrency } from "../utils/currencyAPI";
 
 import {
   getExpenses,
@@ -28,14 +29,19 @@ function Dashboard() {
   const navigate = useNavigate();
   const [loading,setLoading] = useState(false);
 
+  const [result, setResult] = useState(null);
+  
+
   useEffect(() => {
     setExpenses(getExpenses());
     setBalance(getBalance());
   }, []);
 
-  const handleAddExpense = (e) => {
+  const handleAddExpense = async (e) => {
     e.preventDefault();
-    const updated = addExpense(expenses, name, amount);
+    const convertedAmount = await convertCurrency("USD", "INR", amount);
+
+    const updated = addExpense(expenses, name, convertedAmount);
     setExpenses(updated);
     setName("");
     setAmount("");
@@ -63,6 +69,7 @@ function Dashboard() {
     navigate(path);
     }, 1200);
   };
+
 
   const chartData = {
   series: [
@@ -110,8 +117,9 @@ if(loading){
           <li><Link to="/">Dashboard</Link></li>
           <li><Link to="/">Expenses</Link></li>
           <li><Link to="/">Reports</Link></li>
-          <li><Link to="/"></Link></li>
+          <li><Link to="/currency">Currency-Exchanger</Link></li>
         </ul>
+        
         <div className="nav-right">
 
           <button
