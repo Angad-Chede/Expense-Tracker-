@@ -4,6 +4,8 @@ import Chart from "react-apexcharts";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "./loader";
+import PageWrapper from "./PageWrapper";
+
 import {
   getExpenses,
   getBalance,
@@ -96,6 +98,7 @@ if(loading){
 }
 
   return (
+    <PageWrapper>
     <>
       <nav className="navbar">
         <div className="nav-left">
@@ -281,6 +284,7 @@ if(loading){
       )}
 
     </>
+    </PageWrapper>
   );
 }
 
