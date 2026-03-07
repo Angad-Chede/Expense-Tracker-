@@ -143,7 +143,7 @@ p{
 }
 
 .card h3{
-    font-size:20px;
+    font-size:25px;
     font-weight:700;
 }
 
@@ -213,12 +213,15 @@ p{
 }
 
 .expense-name{
-    font-weight:400px;
+    font-family: "Times New Roman", Times, serif ;
+    font-size: 18px;
+    font-weight:600;
 }
 
 .expense-date{
     color:#060809;
-    font-size:15px;
+    font-size:16px;
+    font-weight:700;
 }
 
 .expense-date-header{
@@ -232,7 +235,7 @@ p{
 .expense-amount{
     text-align:right;
     font-weight:600;
-    color:#22d3ee;
+    color:#ffffff;
 }
 
 .modal{
@@ -243,6 +246,7 @@ p{
     backdrop-filter:blur(6px);
     align-items:center;
     justify-content:center;
+    z-index: 1000;
 }
 
 .modal-content{
@@ -334,8 +338,8 @@ p{
 
     background:linear-gradient(
         to bottom,
-        rgba(255,255,255,0.25),
-        rgba(255, 255, 255, 0.326),
+        rgba(255, 255, 255, 0.167),
+        rgba(255, 255, 255, 0.703),
         transparent
     );
 
@@ -359,8 +363,8 @@ p{
     backdrop-filter:blur(18px);
 
     box-shadow:
-        0 40px 80px rgba(0,0,0,0.65),
-        0 10px 30px rgba(0,0,0,0.4);
+        0 20px 20px rgba(255, 251, 251, 0.518),
+        0 10px 30px rgb(128, 124, 124);
 
     z-index:2;
 }
@@ -374,6 +378,7 @@ p{
 
 .graph-tabs button{
     padding:8px 18px;
+    margin-right: 10px;
     border:none;
     border-radius:10px;
     background:#141d40;
