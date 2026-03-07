@@ -240,6 +240,13 @@ if(loading){
       {showExpenseModal && (
         <div className="modal" style={{ display: "flex" }}>
           <div className="modal-content">
+            <button 
+              className="close-btn"
+              onClick={() => setShowExpenseModal(false)}
+            >
+              ✕
+            </button>
+
             <h2>Add Expense</h2>
 
             <form onSubmit={handleAddExpense}>
@@ -272,13 +279,19 @@ if(loading){
       {showBalanceModal && (
         <div className="modal" style={{ display: "flex" }}>
           <div className="modal-content">
+            <button
+              className="close-btn"
+              onClick={() => setShowBalanceModal(false)}
+            >
+              ✕
+            </button>
+
             <h2>Add Balance</h2>
 
             <input
               type="number"
               value={balanceInput}
               onChange={(e) => setBalanceInput(e.target.value)}
-              placeholder="Enter amount"
             />
 
             <button
