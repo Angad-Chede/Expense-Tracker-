@@ -250,8 +250,9 @@ p{
 }
 
 .modal-content{
-    background:#06313a56;
-    border:1px solid rgba(255,255,255,0.1);
+    position:relative;
+    background:#17c1e319;
+    border:1px solid rgba(255, 255, 255, 0.77);
     padding:35px;
     border-radius:20px;
     width:400px;
@@ -260,6 +261,18 @@ p{
 .modal-content h2{
     margin-bottom:20px;
 }
+
+.close-btn{
+    position:absolute;
+    top:15px;
+    right:18px;
+    background:none;
+    border:none;
+    font-size:22px;
+    cursor:pointer;
+    color:white;
+}
+
 
 .form-group{
     display:flex;
